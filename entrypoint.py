@@ -28,9 +28,9 @@ IS_SECURE = sys.argv[7] or False
 
 # create/connect jenkins server
 if IS_SECURE:
-    server = jenkins.Jenkins(f"https://{JENKINS_URL}", username=JENKINS_USER, password=JENKINS_TOKEN)
+    server = jenkins.Jenkins(f"https://{JENKINS_URL}:{JENKINS_PORT}", username=JENKINS_USER, password=JENKINS_TOKEN)
 else:
-    server = jenkins.Jenkins(f"http://{JENKINS_URL}", username=JENKINS_USER, password=JENKINS_TOKEN)
+    server = jenkins.Jenkins(f"http://{JENKINS_URL}:{JENKINS_PORT}", username=JENKINS_USER, password=JENKINS_TOKEN)
 
 user = server.get_whoami()
 version = server.get_version()
