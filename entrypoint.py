@@ -31,7 +31,7 @@ if IS_SECURE:
     server_url = f"https://{JENKINS_URL}:{str(JENKINS_PORT)}"
 else:
     server_url = f"http://{JENKINS_URL}:{str(JENKINS_PORT)}"
-    
+
 print(f"Server URL: {server_url}")
 server = jenkins.Jenkins(server_url, username=JENKINS_USER, password=JENKINS_TOKEN)
 
@@ -49,9 +49,9 @@ queue_id = queue_info[0].get('id')
 # define url to request build_number
 
 if IS_SECURE:
-    url = f"https://{JENKINS_USER}:{JENKINS_TOKEN}@{JENKINS_URL}/queue/item/{queue_id}/api/json?pretty=true"
+    url = f"https://{JENKINS_USER}:{JENKINS_TOKEN}@{JENKINS_URL}:{JENKINS_PORT}/queue/item/{queue_id}/api/json?pretty=true"
 else:
-    url = f"http://{JENKINS_USER}:{JENKINS_TOKEN}@{JENKINS_URL}/queue/item/{queue_id}/api/json?pretty=true"
+    url = f"http://{JENKINS_USER}:{JENKINS_TOKEN}@{JENKINS_URL}:{JENKINS_PORT}/queue/item/{queue_id}/api/json?pretty=true"
 
 
 def get_trigger_info(url: str):
