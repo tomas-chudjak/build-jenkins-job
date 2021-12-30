@@ -1,18 +1,25 @@
 # Build jenkins job from GitHub Action :rocket:
 
-This action builds/triggers a jenkins job, waiting it to be finished and enabling to pass job params.
+This action creates/triggers a Jenkins job, waits for it to finish, and allows you to pass job parameters.
+This action also supports HTTPS and a custom port for Jenkins.
 
 ## Inputs
 
 ### `jenkins-token`
 
+Your Jenkins token. See [this post](https://stackoverflow.com/questions/45466090/how-to-get-the-api-token-for-jenkins#45466184) for information on how to generate one
+
 **Required**
  
 ### `jenkins-url`
 
+The URL should look like this: `github.com` and not `https://github.com` or `github.com:8080`
+
 **Required** 
 
 ### `jenkins-user`
+
+The Jenkins user to use
 
 **Required** 
 
@@ -30,6 +37,8 @@ if job in jenkins root:
 ```
 
 ### `jenkins-port`
+
+The jenkins server port, the default port for HTTP (non-secure) is 80 and 443 for HTTPS (secure)
 
 **Required**
 
