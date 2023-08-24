@@ -2,6 +2,7 @@
 
 # use of https://python-jenkins.readthedocs.io/en/latest/index.html
 
+import os
 import sys
 import requests
 import jenkins
