@@ -65,9 +65,13 @@ while "executable" not in (info := get_trigger_info(url)):
 build_number = info["executable"]["number"]
 print(f"BUILD NUMBER: {build_number}")
 
+def set_output(name, value):
+    with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+        print(f'{name}={value}', file=fh)
 
 def get_status(name: str, number: int) -> str:
     build_info = server.get_build_info(name=name, number=number)
+    set_output("job_url", build_info["url"])
     job_status = build_info["result"]
     return job_status
 
@@ -76,7 +80,9 @@ while not (status := get_status(job_name, build_number)):
     time.sleep(1)
 
 print(f"Job status is : {status}")
-print(f"::set-output name=job_status::{status}")
+# print(f"::set-output name=job_status::{status}")
+
+set_output("status", status)
 
 if status != 'SUCCESS':
     exit(1)
