@@ -63,6 +63,8 @@ def get_trigger_info(url: str):
 while "executable" not in (info := get_trigger_info(url)):
     time.sleep(3)
 
+print(info)
+
 build_number = info["executable"]["number"]
 print(f"BUILD NUMBER: {build_number}")
 
