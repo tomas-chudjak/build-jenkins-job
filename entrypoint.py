@@ -89,7 +89,7 @@ def set_output(name, value):
     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
         print(f'{name}={value}', file=fh)
 
-def get_status(server, name: str, number: int, max_retries=3, delay=5) -> str:
+def get_status(server, job_name: str, number: int, max_retries=3, delay=5) -> str:
     attempt = 0
     while attempt < max_retries:
         try:
