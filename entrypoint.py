@@ -40,27 +40,10 @@ user = server.get_whoami()
 version = server.get_version()
 print(f"Hello {user['fullName']} from Jenkins {version}")
 
-def build_job_with_retry(server, job_name, parameters, token, max_retries=3, delay=5):
-    attempt = 0
-    while attempt < max_retries:
-        try:
-            server.build_job(job_name, parameters=parameters, token=token)
-            return  # Successful build job
-        except requests.exceptions.RequestException as e:
-            print(f"Error on attempt {attempt + 1}: {e}")
-            time.sleep(delay)
-            attempt += 1
-    raise Exception("Failed to build job after several attempts")
-
 # build job
 split = JOB_PATH.split("job/")
 job_name = "".join(split)
-# server.build_job(job_name, parameters=json.loads(JOB_PARAMS), token=JENKINS_TOKEN)
-try:
-    build_job_with_retry(server, job_name, parameters=json.loads(JOB_PARAMS), token=JENKINS_TOKEN)
-except Exception as e:
-    print(f"Failed to start Jenkins job: {e}")
-    sys.exit(1)
+server.build_job(job_name, parameters=json.loads(JOB_PARAMS), token=JENKINS_TOKEN)
 queue_info = server.get_queue_info()
 queue_id = queue_info[0].get('id')
 
@@ -89,37 +72,15 @@ def set_output(name, value):
     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
         print(f'{name}={value}', file=fh)
 
-def get_status(server, job_name: str, number: int, max_retries=3, delay=5) -> str:
-    attempt = 0
-    while attempt < max_retries:
-        try:
-            build_info = server.get_build_info(name=job_name, number=number)
-            print(build_info)
-            if build_info and build_info.get("result") is not None:
-                set_output("job_url", build_info["url"])
-                return build_info["result"]
-            else:
-                raise ValueError("Empty response or missing 'result' in build info")
-        except (requests.exceptions.RequestException, ValueError) as e:
-            print(f"Retry {attempt + 1}/{max_retries} for job status due to error: {e}")
-            time.sleep(delay)
-            attempt += 1
-    raise Exception("Failed to retrieve job status after several attempts")
-
-    # build_info = server.get_build_info(name=name, number=number)
-    # set_output("job_url", build_info["url"])
-    # job_status = build_info["result"]
-    # return job_status
-
-try:
-    status = get_status(server, job_name, build_number)
-except Exception as e:
-    print(f"Failed to retrieve job status: {e}")
-    sys.exit(1)
+def get_status(name: str, number: int) -> str:
+    build_info = server.get_build_info(name=name, number=number)
+    set_output("job_url", build_info["url"])
+    job_status = build_info["result"]
+    return job_status
 
 
-# while not (status := get_status(job_name, build_number)):
-#     time.sleep(1)
+while not (status := get_status(job_name, build_number)):
+    time.sleep(3)
 
 print(f"Job status is : {status}")
 # print(f"::set-output name=job_status::{status}")
