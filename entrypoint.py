@@ -94,6 +94,7 @@ def get_status(server, name: str, number: int, max_retries=3, delay=5) -> str:
     while attempt < max_retries:
         try:
             build_info = server.get_build_info(name=job_name, number=number)
+            print(build_info)
             if build_info and build_info.get("result") is not None:
                 set_output("job_url", build_info["url"])
                 return build_info["result"]
