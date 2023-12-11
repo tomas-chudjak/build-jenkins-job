@@ -62,7 +62,9 @@ def get_trigger_info(url: str):
     except requests.RequestException as e:
         print(f"HTTP Request failed: {e}")
         return None
-max_retries = 5  # Maximum number of retries
+    
+max_retries = 60  # Maximum number of retries
+sleep_timeout = 10 # Sleep timeout between the HTTP requests
 attempts = 0
 
 while True:
@@ -75,7 +77,7 @@ while True:
         print("Maximum retries reached. Exiting.")
         exit()
 
-    time.sleep(6)
+    time.sleep(sleep_timeout)
 
 print(info)
 if "number" in info["executable"]:
