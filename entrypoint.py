@@ -56,39 +56,39 @@ else:
 
 def get_trigger_info(url: str):
     try:
-        response = requests.get(url, timeout=10)  # Set a reasonable timeout
+        response = requests.get(url, timeout=120)  # Set a reasonable timeout
         response.raise_for_status()  # This will raise an HTTPError if the HTTP request returned an unsuccessful status code
         return response.json()
     except requests.RequestException as e:
         print(f"HTTP Request failed: {e}")
         return None
     
-# max_retries = 60  # Maximum number of retries
-# sleep_timeout = 10 # Sleep timeout between the HTTP requests
-# attempts = 0
+max_retries = 60  # Maximum number of retries
+sleep_timeout = 10 # Sleep timeout between the HTTP requests
+attempts = 0
 
-# while True:
-#     info = get_trigger_info(url)
-#     if info is not None and "executable" in info:
-#         break
+while True:
+    info = get_trigger_info(url)
+    if info is not None and "executable" in info:
+        break
 
-#     attempts += 1
-#     if attempts >= max_retries:
-#         print("Maximum retries reached. Exiting.")
-#         exit()
+    attempts += 1
+    if attempts >= max_retries:
+        print("Maximum retries reached. Exiting.")
+        exit()
 
-#     time.sleep(sleep_timeout)
+    time.sleep(sleep_timeout)
 
-# print(info)
-# if "number" in info["executable"]:
-#     build_number = info["executable"]["number"]
-#     print(f"Build number: {build_number}")
-# else:
-#     print("The 'number' key is not present in the 'executable' dictionary.")
+print(info)
+if "number" in info["executable"]:
+    build_number = info["executable"]["number"]
+    print(f"Build number: {build_number}")
+else:
+    print("The 'number' key is not present in the 'executable' dictionary.")
 
-def get_trigger_info(url: str):
-    trigger_info = requests.get(url).json()
-    return trigger_info
+# def get_trigger_info(url: str):
+#     trigger_info = requests.get(url).json()
+#     return trigger_info
 
 
 while "executable" not in (info := get_trigger_info(url)):
