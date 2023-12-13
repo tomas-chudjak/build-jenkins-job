@@ -63,41 +63,41 @@ def get_trigger_info(url: str):
         print(f"HTTP Request failed: {e}")
         return None
     
-max_retries = 60  # Maximum number of retries
-sleep_timeout = 10 # Sleep timeout between the HTTP requests
-attempts = 0
+# max_retries = 60  # Maximum number of retries
+# sleep_timeout = 10 # Sleep timeout between the HTTP requests
+# attempts = 0
 
-while True:
-    info = get_trigger_info(url)
-    if info is not None and "executable" in info:
-        break
+# while True:
+#     info = get_trigger_info(url)
+#     if info is not None and "executable" in info:
+#         break
 
-    attempts += 1
-    if attempts >= max_retries:
-        print("Maximum retries reached. Exiting.")
-        exit()
+#     attempts += 1
+#     if attempts >= max_retries:
+#         print("Maximum retries reached. Exiting.")
+#         exit()
 
-    time.sleep(sleep_timeout)
-
-print(info)
-if "number" in info["executable"]:
-    build_number = info["executable"]["number"]
-    print(f"Build number: {build_number}")
-else:
-    print("The 'number' key is not present in the 'executable' dictionary.")
-
-# def get_trigger_info(url: str):
-#     trigger_info = requests.get(url).json()
-#     return trigger_info
-
-
-# while "executable" not in (info := get_trigger_info(url)):
-#     time.sleep(6)
+#     time.sleep(sleep_timeout)
 
 # print(info)
+# if "number" in info["executable"]:
+#     build_number = info["executable"]["number"]
+#     print(f"Build number: {build_number}")
+# else:
+#     print("The 'number' key is not present in the 'executable' dictionary.")
 
-# build_number = info["executable"]["number"]
-# print(f"BUILD NUMBER: {build_number}")
+def get_trigger_info(url: str):
+    trigger_info = requests.get(url).json()
+    return trigger_info
+
+
+while "executable" not in (info := get_trigger_info(url)):
+    time.sleep(6)
+
+print(info)
+
+build_number = info["executable"]["number"]
+print(f"BUILD NUMBER: {build_number}")
 
 def set_output(name, value):
     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
