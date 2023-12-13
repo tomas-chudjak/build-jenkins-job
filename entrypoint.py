@@ -54,6 +54,8 @@ if IS_SECURE:
 else:
     url = f"http://{JENKINS_USER}:{JENKINS_TOKEN}@{JENKINS_URL}:{JENKINS_PORT}/queue/item/{queue_id}/api/json?pretty=true"
 
+print(f"URL:  {url}")
+
 # def get_trigger_info(url: str):
 #     try:
 #         response = requests.get(url, timeout=120)  # Set a reasonable timeout
