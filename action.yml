@@ -28,7 +28,7 @@ outputs:
     description: 'Build status'
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://270171913989.dkr.ecr.us-west-2.amazonaws.com/hostaway:python-3.8'
   args:
     - ${{ inputs.jenkins-url }}
     - ${{ inputs.jenkins-token }}
