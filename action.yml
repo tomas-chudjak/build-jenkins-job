@@ -27,16 +27,35 @@ outputs:
   job_status:
     description: 'Build status'
 runs:
-  using: 'docker'
-  image: 'docker://270171913989.dkr.ecr.us-west-2.amazonaws.com/hostaway:python-3.8'
-  args:
-    - ${{ inputs.jenkins-url }}
-    - ${{ inputs.jenkins-token }}
-    - ${{ inputs.user }}
-    - ${{ inputs.job-path }}
-    - ${{ inputs.jenkins-port }}
-    - ${{ inputs.job-params }}
-    - ${{ inputs.is-secure }}
+  # using: 'docker'
+  # image: 'docker://270171913989.dkr.ecr.us-west-2.amazonaws.com/hostaway:python-3.8'
+  # args:
+  #   - ${{ inputs.jenkins-url }}
+  #   - ${{ inputs.jenkins-token }}
+  #   - ${{ inputs.user }}
+  #   - ${{ inputs.job-path }}
+  #   - ${{ inputs.jenkins-port }}
+  #   - ${{ inputs.job-params }}
+  #   - ${{ inputs.is-secure }}
+  using: "composite"
+  steps:
+    - name: Login to ECR
+      shell: bash
+      run: |
+        aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 270171913989.dkr.ecr.us-west-2.amazonaws.com
+
+    - name: Run Jenkins job in ECR image
+      shell: bash
+      run: |
+        docker run --rm \
+          -e JENKINS_URL="${{ inputs.jenkins-url }}" \
+          -e JENKINS_TOKEN="${{ inputs.jenkins-token }}" \
+          -e USER="${{ inputs.user }}" \
+          -e JOB_PATH="${{ inputs.job-path }}" \
+          -e JENKINS_PORT="${{ inputs.jenkins-port }}" \
+          -e JOB_PARAMS="${{ inputs.job-params }}" \
+          -e IS_SECURE="${{ inputs.is-secure }}" \
+          270171913989.dkr.ecr.us-west-2.amazonaws.com/hostaway:python-3.8
 branding:
   icon: 'arrow-right-circle'
   color: 'blue'

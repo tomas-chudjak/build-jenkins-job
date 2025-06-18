@@ -101,13 +101,18 @@ print(info)
 build_number = info["executable"]["number"]
 print(f"BUILD NUMBER: {build_number}")
 
+build_info = server.get_build_info(name=name, number=number)
+set_output("job_url", build_info["url"])
+
+# def set_output(name, value):
+#     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+#         print(f'{name}={value}', file=fh)
 def set_output(name, value):
-    with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
-        print(f'{name}={value}', file=fh)
+    print(f"{name}={value}")
 
 def get_status(name: str, number: int) -> str:
     build_info = server.get_build_info(name=name, number=number)
-    set_output("job_url", build_info["url"])
+    # set_output("job_url", build_info["url"])
     job_status = build_info["result"]
     return job_status
 
